@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://mitcr.milaboratory.com/xml/parameters"
+           xmlns="http://mitcr.milaboratory.com/xml/parameters"
+           elementFormDefault="qualified">
+
+    <!-- an empty element like <includeCysPhe/> -->
+
+    <xs:complexType name="empty">
+        <xs:complexContent>
+            <xs:restriction base="xs:anyType"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- simple types -->
+
+    <xs:simpleType name="gene">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TRA"/>
+            <xs:enumeration value="TRB"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="species">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HomoSapiens"/>
+            <xs:enumeration value="MusMusculus"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="strand">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="forward"/>
+            <xs:enumeration value="reverseComplement"/>
+            <xs:enumeration value="both"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="alignmentExtensionDirections">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="insideCDR3"/>
+            <xs:enumeration value="outsideCDR3"/>
+            <xs:enumeration value="both"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="clusterizationType">
+        <xs:restriction base="xs:string">
+            <!-- eliminate these errors -->
+            <xs:enumeration value="oneMismatch"/>
+            <!-- save my diversity -->
+            <xs:enumeration value="v2d1j2t3Explicit"/>
+            <!-- do not perform clusterization -->
+            <xs:enumeration value="none"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- complex types -->
+
+    <xs:complexType name="vjSegmentMapperParameters">
+        <xs:all>
+            <xs:element name="extensionDirections" type="alignmentExtensionDirections"/>
+            <xs:element name="seedFrom" type="xs:integer"/>
+            <xs:element name="seedTo" type="xs:integer"/>
+            <xs:element name="minAlignmentMatches" type="xs:nonNegativeInteger"/>
+            <xs:element name="lengthTolerance" type="xs:nonNegativeInteger"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="dSegmentMapperParameters">
+        <xs:all>
+            <xs:element name="minLength" type="xs:nonNegativeInteger"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="qualityInterpretationStrategy">
+        <xs:choice>
+            <xs:element name="illumina" type="xs:nonNegativeInteger"/>
+            <xs:element name="dummy" type="empty"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="clusterizerParameters">
+        <xs:all>
+            <xs:element name="type" type="clusterizationType"/>
+            <xs:element name="maxClusterizationRatio" type="xs:float"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="cdr3ExtractorParameters">
+        <xs:all>
+            <xs:element name="v" type="vjSegmentMapperParameters"/>
+            <xs:element name="j" type="vjSegmentMapperParameters"/>
+            <xs:element minOccurs="0" name="d" type="dSegmentMapperParameters"/>
+            <xs:element name="upperCDR3LengthThreshold" type="xs:nonNegativeInteger"/>
+            <xs:element name="lowerCDR3LengthThreshold" type="xs:nonNegativeInteger"/>
+            <xs:element name="strand" type="strand"/>
+            <xs:element minOccurs="0" name="includeCysPhe" type="empty"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="cloneGeneratorParameters">
+        <xs:all>
+            <xs:element name="segmentInformationAggregationFactor" type="xs:float"/>
+            <xs:element minOccurs="0" name="maxErrorsInBadPoints" type="xs:nonNegativeInteger"/>
+            <xs:element minOccurs="0" name="proportionalMapping" type="empty"/>
+            <xs:element minOccurs="0" name="filterOffLQReads" type="empty"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="allParameters">
+        <xs:all>
+            <xs:element name="gene" type="gene"/>
+            <xs:element name="species" type="species"/>
+            <xs:element name="qualityInterpretationStrategy" type="qualityInterpretationStrategy"/>
+            <xs:element name="cdr3Extractor" type="cdr3ExtractorParameters"/>
+            <xs:element name="cloneGenerator" type="cloneGeneratorParameters"/>
+            <xs:element name="clusterizer" type="clusterizerParameters"/>
+        </xs:all>
+    </xs:complexType>
+
+    <!-- root element -->
+
+    <xs:element name="parameters" type="allParameters"/>
+</xs:schema>

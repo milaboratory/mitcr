@@ -1,0 +1,8 @@
+Author: Dmitriy Bolotin, <bolotin.dmitriy@gmail.com>
+Organization: IBCH RAS <http://www.ibch.ru/>
+
+Author: Dmitriy Chudakov, <chudakovdm@mail.ru>
+Organization: IBCH RAS <http://www.ibch.ru/>
+
+Author: Shugay Mikhail, <mikhail.shugay@gmail.com>
+Organization: IBCH RAS <http://www.ibch.ru/>

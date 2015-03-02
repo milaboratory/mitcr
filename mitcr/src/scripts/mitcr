@@ -1,0 +1,49 @@
+#!/bin/bash
+
+freem=`free -m | sed 's/\s\+/ /g' | cut -d' ' -f4 | head -n 2 | tail -n 1 | tr -d '\n'`
+buffersm=`free -m | sed 's/\s\+/ /g' | cut -d' ' -f6 | head -n 2 | tail -n 1 | tr -d '\n'`
+cachedm=`free -m | sed 's/\s\+/ /g' | cut -d' ' -f7 | head -n 2 | tail -n 1 | tr -d '\n'`
+
+free_memory=`echo "$freem+$buffersm+$cachedm" | bc`
+
+java_memory=`echo "$free_memory*9/10" | bc`
+
+classpath="/usr/share/java/micommons.jar:/usr/share/java/redberry-pipe.jar:/usr/share/java/jdom1.jar:/usr/share/java/commons-compress.jar:/usr/share/java/commons-math.jar:/usr/share/java/commons-cli.jar:/usr/share/java/trove3.jar:/usr/share/java/mitcr.jar"
+xmx="${java_memory}m"
+params=("$@")
+
+java_path=`ls -1 /usr/lib/jvm | grep java-7-openjdk | grep -v common | tr -d '\n'`
+if [ -z "$java_path" ]; then
+    java_path=`ls -1 /usr/lib/jvm | grep java-7 | head -n 1 | tr -d '\n'`
+fi
+java_path="/usr/lib/jvm/${java_path}/bin/java"
+
+if [ ! -f "$java_path" ]; then
+    echo "Can't find Java 7 on your system."
+fi
+
+auto_memory=true
+
+for ((n=0; n < ${#params[@]}; n++))
+do
+    if [[ "${params[$n]}" == -Xmx* ]]
+    then
+	xmx="${params[$n]:4}"
+	unset params[$n]
+	auto_memory=false
+    fi
+done
+
+if $auto_memory ; then
+    echo "Max java heap space automatically set to ${xmx} (90% of free memory). Use '-Xmx' option to adjust this value."
+else
+    echo "Java heap space set to ${xmx}."
+fi
+
+options="-XX:+AggressiveOpts"
+
+if [[ `uname -i` == "x86_64" ]]; then
+    options="$options -XX:+DoEscapeAnalysis"
+fi
+
+eval "${java_path} -Dexecutable=mitcr $options -cp $classpath -Xmx${xmx} com.milaboratory.mitcr.cli.Main ${params[@]}"

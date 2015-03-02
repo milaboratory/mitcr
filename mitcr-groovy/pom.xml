@@ -1,0 +1,199 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.milaboratory</groupId>
+    <artifactId>mitcr-groovy</artifactId>
+    <version>1.0.3</version>
+    <packaging>jar</packaging>
+    <name>mitcr-groovy</name>
+    <url>http://mitcr.milaboratory.com/</url>
+
+    <description>
+        MiTCR is an open source software package aimed at extraction of information
+        on repertoire of T-cell clones from Next Generation Sequencing (NGS) data.
+        It is designed with the knowledge of the critical challenges arising in
+        everyday processing of immunological data.
+    </description>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>dbolotin</id>
+            <email>bolotin.dmitriy@gmail.com</email>
+            <name>Bolotin Dmitriy</name>
+            <organization>IBCH RAS</organization>
+            <organizationUrl>http://www.ibch.ru/</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+                <role>tester</role>
+                <role>documentation</role>
+            </roles>
+            <timezone>UTC+04:00</timezone>
+            <url>https://bitbucket.org/dbolotin</url>
+        </developer>
+        <developer>
+            <id>mikesh</id>
+            <email>mikhail.shugay@gmail.com</email>
+            <name>Mikhail Shugay</name>
+            <organization>IBCH RAS</organization>
+            <organizationUrl>http://www.ibch.ru/</organizationUrl>
+            <roles>
+                <role>developer</role>
+                <role>tester</role>
+                <role>documentation</role>
+            </roles>
+            <timezone>UTC+04:00</timezone>
+            <url>https://bitbucket.org/mikesh</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:hg:http://bitbucket.org/milaboratory/mitcr</connection>
+        <tag>v1.0.3</tag>
+        <url>https://bitbucket.org/milaboratory/mitcr/src/?at=v1.0.3</url>
+    </scm>
+
+    <issueManagement>
+        <system>YouTrack</system>
+        <url>http://dev.milaboratory.com/</url>
+    </issueManagement>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.milaboratory</groupId>
+            <artifactId>mitcr</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.milaboratory</groupId>
+            <artifactId>mitcr</artifactId>
+            <version>${project.version}</version>
+            <classifier>distribution</classifier>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.1.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-eclipse-compiler</artifactId>
+                <version>2.7.0-01</version>
+                <extensions>true</extensions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <minimizeJar>true</minimizeJar>
+                            <artifactSet>
+                                <!-- <excludes>
+                                    <exclude>*:*</exclude>
+                                </excludes> -->
+                                <includes>
+                                    <include>com.milaboratory:mitcr:jar:distribution:${project.version}</include>
+                                </includes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>com.milaboratory:mitcr:jar:distribution:${project.version}</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                            <!-- <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/localization/*</exclude>
+                                        <exclude>META-INF/*.txt</exclude>
+                                        <exclude>META-INF/*.xml</exclude>
+                                        <exclude>JDOMAbout*.class</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters> -->
+                            <!-- <outputFile>target/mitcr.jar</outputFile> -->
+                            <!-- <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.milaboratory.mitcr.cli.Main</mainClass>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                    <resource>META-INF/README</resource>
+                                    <file>README.txt</file>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                    <resource>META-INF/LICENSE</resource>
+                                    <file>LICENSE.txt</file>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                    <resource>META-INF/AUTHORS</resource>
+                                    <file>AUTHORS.txt</file>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                                    <resource>META-INF/NOTICE</resource>
+                                    <file>NOTICE.txt</file>
+                                </transformer>
+                            </transformers> -->
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>distribution</shadedClassifierName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <compilerId>groovy-eclipse-compiler</compilerId>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-eclipse-compiler</artifactId>
+                        <version>2.7.0-01</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
