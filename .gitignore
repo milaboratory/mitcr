@@ -1,0 +1,10 @@
+target/
+nbactions.*\.xml$
+nb-configuration.xml$
+\.log$
+\.log\.
+\.iml$
+.idea\/
+\.DS_Store$
+\.ipr$
+\.iws$
