@@ -1,4 +1,4 @@
-## We recommend using our new software [MiXCR](https://github.com/milaboratory/mixcr) for RepSeq data analysis.
+# We recommend using our new software [MiXCR](https://github.com/milaboratory/mixcr) for RepSeq data analysis.
 
 ## MiTCR
 
