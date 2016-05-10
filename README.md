@@ -1,5 +1,15 @@
-See [mitcr.milaboratory.com](http://mitcr.milaboratory.com/) for instruction on running the MiTCR and API documentation.
+## We recommend using our new software [MiXCR](https://github.com/milaboratory/mixcr) for RepSeq data analysis.
 
-> Note that this version of software can also perform analysis for TRG/TRD. Supports human and mouse species.
+## MiTCR
 
-This software is distributed under GPL.
+### Binary distribution
+
+Only jar distribution is available for final MiTCR version, see [release](https://github.com/milaboratory/mitcr/releases) page.
+
+### Documentation
+
+Documentation for MiTCR can be found here: [PDF](http://files.milaboratory.com/mitcr/Manual.pdf).
+
+### License
+
+This software is distributed under the terms of GNU GPL v3.
